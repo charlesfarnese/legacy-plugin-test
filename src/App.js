@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
 
-function App() {
+function LegacyPlugin() {
+  const [eventData, setEventData] = useState(null);
+  const frontLegacyPlugin = () => {
+    const script = document.createElement("script");
+    script.src = "https://dl.frontapp.com/libs/frontjs.min.js";
+    script.onload = () => {
+      window.Front.on("conversation", (data) => {
+        console.log("Event data --> ", data);
+        setEventData(data);
+      });
+    };
+    document.body.append(script);
+  };
+
+  useEffect(() => {
+    frontLegacyPlugin();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h3>Legacy Plugin</h3>
+      {eventData && <div>{`event data --> ${eventData.conversation.id}`}</div>}
+    </>
   );
 }
 
-export default App;
+export default LegacyPlugin;
